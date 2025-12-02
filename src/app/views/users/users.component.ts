@@ -90,7 +90,7 @@ export class UsersComponent implements OnInit {
       telefone: "",
       municipio: "",
       uf: "",
-      tipo: "",
+      role: undefined!,
       senha: "",
       endereco: "",
     };
