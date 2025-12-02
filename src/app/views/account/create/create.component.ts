@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { UserService } from "../../services/user.service";
-import { User } from "../../domain/model/user";
+import { UserService } from "../../../services/user.service";
+import { User } from "../../../domain/model/user";
 import { Router } from "@angular/router";
+import { UserRole } from "src/app/domain/model/user-role";
 
 @Component({
   selector: "app-user-create",
@@ -53,7 +54,7 @@ export class UserCreateComponent {
       municipio: formValues.municipio,
       uf: formValues.uf.toUpperCase(),
       senha: formValues.senha,
-      tipo: "C",
+      role: UserRole.USER,
     };
 
     this.userService.createUser(newUser).subscribe({

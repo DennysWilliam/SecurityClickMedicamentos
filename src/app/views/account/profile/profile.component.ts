@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { User } from "../../domain/model/user";
-import { UserService } from "../../services/user.service";
+import { User } from "../../../domain/model/user";
+import { UserService } from "../../../services/user.service";
 import { getCurrentUserStoraged } from "src/app/helpers/localstorage";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UserRole } from "src/app/domain/model/user-role";
 
 @Component({
   selector: "app-profile",
@@ -44,7 +45,7 @@ export class ProfileComponent implements OnInit {
       municipio: [user.municipio, Validators.required],
       uf: [user.uf, [Validators.required, Validators.maxLength(2)]],
       cpf: [user.cpf],
-      tipo: [user.tipo],
+      tipo: [user.role],
       id: [user.id],
     });
   }
@@ -56,7 +57,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUserById(this.storagedUser.id).subscribe({
       next: (userData) => {
         this.user = userData;
-        this.isAdmin = userData.tipo === "A";
+        this.isAdmin = userData.role === UserRole.ADMINISTRATOR;
         this.isLoading = false;
         this.initForm(userData);
       },
