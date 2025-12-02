@@ -1,0 +1,196 @@
+<div class="consulta-container">
+  <header class="consulta-header">
+    <div class="header-content">
+      <h1 class="titulo-sistema">Click Medicamentos</h1>
+
+      <nav class="header-nav">
+        <button
+          class="nav-button"
+          routerLink="/search"
+          routerLinkActive="active"
+        >
+          <span class="material-icons">home</span>
+          Início
+        </button>
+        <button
+          class="nav-button"
+          routerLink="/pharmacies"
+          routerLinkActive="active"
+        >
+          <span class="material-icons">local_pharmacy</span>
+          Farmácias
+        </button>
+        <button
+          class="nav-button"
+          routerLink="/profile"
+          routerLinkActive="active"
+        >
+          <span class="material-icons">people</span>
+          Perfil
+        </button>
+        <button
+          class="nav-button"
+          routerLink="/favorito"
+          routerLinkActive="active"
+        >
+          <span class="material-icons">favorite</span>
+          Favoritos
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="busca-section">
+    <div class="busca-container">
+      <h2>Consulta de Medicamentos</h2>
+      <p>
+        Busque medicamentos por nome ou princípio ativo nas farmácias municipais
+      </p>
+
+      <form
+        [formGroup]="consultaForm"
+        (ngSubmit)="onBuscar()"
+        class="busca-form"
+      >
+        <div class="busca-input-group">
+          <input
+            type="text"
+            formControlName="termoBusca"
+            placeholder="Digite o nome do medicamento ou princípio ativo..."
+            class="busca-input"
+          />
+          <button type="submit" class="busca-button" [disabled]="isLoading">
+            <span class="material-icons" *ngIf="!isLoading">search</span>
+            <span class="spinner" *ngIf="isLoading"></span>
+            {{ isLoading ? "Buscando..." : "Buscar" }}
+          </button>
+          <button type="button" class="limpar-button" (click)="onLimpar()">
+            <span class="material-icons">clear</span>
+            Limpar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="resultados-section">
+    <div class="resultados-container">
+      <div
+        class="resultados-header"
+        *ngIf="buscaRealizada || medicamentosFiltrados.length > 0"
+      >
+        <h3>
+          <span *ngIf="!buscaRealizada">Todos os medicamentos</span>
+          <span *ngIf="buscaRealizada && termoBusca"
+            >Resultados para "{{ termoBusca }}"</span
+          >
+          <span *ngIf="buscaRealizada && !termoBusca"
+            >Todos os medicamentos</span
+          >
+        </h3>
+        <span class="resultados-count"
+          >{{ medicamentosFiltrados.length }} medicamento(s) encontrado(s)</span
+        >
+      </div>
+
+      <div class="loading-container" *ngIf="isLoading">
+        <div class="loading-spinner"></div>
+        <p>Buscando medicamentos...</p>
+      </div>
+
+      <div
+        class="medicamentos-grid"
+        *ngIf="!isLoading && medicamentosFiltrados.length > 0"
+      >
+        <div
+          class="medicamento-card"
+          *ngFor="let medicamento of medicamentosFiltrados"
+          [ngClass]="
+            medicamento.disponivel ? 'statusDisponivel' : 'statusIndisponivel'
+          "
+        >
+          <div class="medicamento-header">
+            <h4>{{ medicamento.nome }}</h4>
+            <button
+              class="favorito-button"
+              (click)="toggleFavorito(medicamento)"
+              [ngClass]="{ favorito: medicamento.favoritado }"
+              title="Adicionar aos favoritos"
+            >
+              <span class="material-icons">
+                {{ medicamento.favoritado ? "favorite" : "favorite_border" }}
+              </span>
+            </button>
+          </div>
+
+          <div class="medicamento-info">
+            <div class="info-item">
+              <span class="info-label">Farmácia:</span>
+              <span class="info-value">{{
+                medicamento.farmaciaNome || "-"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Disponibilidade:</span>
+              <span class="info-value">{{
+                medicamento.disponivel ? "Disponível" : "Indisponível"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Quantidade em estoque:</span>
+              <span class="info-value">{{
+                medicamento.quantidadeEstoque
+              }}</span>
+            </div>
+          </div>
+
+          <button
+            class="detalhes-button"
+            (click)="medicamento.showDetalhes = !medicamento.showDetalhes"
+          >
+            {{ medicamento.showDetalhes ? "Ocultar Detalhes" : "Ver Detalhes" }}
+          </button>
+
+          <div *ngIf="medicamento.showDetalhes" class="detalhes">
+            <div class="info-item">
+              <span class="info-label">Princípio Ativo:</span>
+              <span class="info-value">{{
+                medicamento.principioAtivo || "-"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Data de cadastro:</span>
+              <span class="info-value">{{
+                medicamento.data_cadastro || "-"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Descrição:</span>
+              <span class="info-value">{{ medicamento.descricao || "-" }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Categoria:</span>
+              <span class="info-value">{{ medicamento.categoria || "-" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          !isLoading && buscaRealizada && medicamentosFiltrados.length === 0
+        "
+        class="no-results"
+      >
+        <div class="no-results-icon">
+          <span class="material-icons">search_off</span>
+        </div>
+        <h3>Nenhum medicamento encontrado</h3>
+        <p>Tente buscar com outros termos ou verifique a grafia.</p>
+        <button class="limpar-button-alt" (click)="onLimpar()">
+          Ver todos os medicamentos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

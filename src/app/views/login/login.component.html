@@ -1,0 +1,54 @@
+<div class="login-container">
+  <div class="login-card">
+    <img src="../../../assets/logo.png" alt="" width="150px" />
+    <div class="login-header">
+      <p>Sistema de Consulta de Medicamentos</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+      <div class="form-group">
+        <label for="usuario">Minha Conta</label>
+        <input
+          type="text"
+          id="usuario"
+          formControlName="usuario"
+          placeholder="Digite seu usuário"
+          [class.error]="hasError('usuario')"
+        />
+        <div class="error-message" *ngIf="hasError('usuario')">
+          {{ getErrorMessage("usuario") }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input
+          type="password"
+          id="senha"
+          formControlName="senha"
+          placeholder="Digite sua senha"
+          [class.error]="hasError('senha')"
+        />
+        <div class="error-message" *ngIf="hasError('senha')">
+          {{ getErrorMessage("senha") }}
+        </div>
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Entrar</span>
+        <span *ngIf="isLoading" class="loading">
+          <span class="spinner"></span>
+          Entrando...
+        </span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>
+        Acesse o sistema para consultar medicamentos disponíveis nas farmácias
+        municipais
+      </p>
+      <p>Não possui conta ainda? <a href="/create">Clique aqui</a></p>
+    </div>
+  </div>
+</div>

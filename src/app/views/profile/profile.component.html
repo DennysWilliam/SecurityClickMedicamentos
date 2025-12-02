@@ -1,0 +1,183 @@
+<header class="consulta-header">
+  <div class="header-content">
+    <h1>ClickMedicamentos</h1>
+    <nav class="header-nav">
+      <button class="nav-button" routerLink="/search" routerLinkActive="active">
+        <span class="material-icons">home</span>
+        Inicio
+      </button>
+      <button
+        class="nav-button"
+        routerLink="/pharmacies"
+        routerLinkActive="active"
+      >
+        <span class="material-icons">local_pharmacy</span>
+        Farmácias
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="page-content">
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Carregando perfil...</p>
+  </div>
+
+  <div class="error-container" *ngIf="error && !isLoading">
+    <span class="material-icons">error_outline</span>
+    <h3>Ocorreu um Erro</h3>
+    <p>{{ error }}</p>
+  </div>
+
+  <div
+    class="profile-card"
+    *ngIf="user && !isLoading"
+    [formGroup]="profileForm"
+  >
+    <div class="profile-header">
+      <span class="material-icons profile-icon">account_circle</span>
+      <h2>
+        <ng-container *ngIf="isEditing; else viewName">
+          <input
+            type="text"
+            class="form-control text-center h2-input"
+            formControlName="nome"
+            placeholder="Nome Completo"
+          />
+        </ng-container>
+        <ng-template #viewName>{{ user.nome }}</ng-template>
+      </h2>
+      <p class="user-email">
+        <ng-container *ngIf="isEditing; else viewEmail">
+          <input
+            type="email"
+            class="form-control text-center p-input"
+            formControlName="email"
+            placeholder="E-mail"
+          />
+        </ng-container>
+        <ng-template #viewEmail>{{ user.email }}</ng-template>
+      </p>
+    </div>
+
+    <div class="profile-info">
+      <div class="info-item">
+        <strong>CPF:</strong>
+        <span>{{ user.cpf }}</span>
+      </div>
+
+      <div class="info-item">
+        <strong>Telefone:</strong>
+        <ng-container *ngIf="isEditing; else viewTelefone">
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="telefone"
+            placeholder="Telefone"
+          />
+        </ng-container>
+        <ng-template #viewTelefone>
+          <span>{{ user.telefone }}</span>
+        </ng-template>
+      </div>
+
+      <div class="info-item">
+        <strong>Endereço:</strong>
+        <ng-container *ngIf="isEditing; else viewEndereco">
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="endereco"
+            placeholder="Rua e Número"
+          />
+        </ng-container>
+        <ng-template #viewEndereco>
+          <span>{{ user.endereco }}</span>
+        </ng-template>
+      </div>
+
+      <div class="info-item">
+        <strong>Cidade / UF:</strong>
+        <ng-container *ngIf="isEditing; else viewLocal">
+          <div class="d-flex gap-2">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              formControlName="municipio"
+              placeholder="Município"
+            />
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              formControlName="uf"
+              placeholder="UF"
+              maxlength="2"
+              style="width: 80px"
+            />
+          </div>
+        </ng-container>
+        <ng-template #viewLocal>
+          <span>{{ user.municipio }}, {{ user.uf }}</span>
+        </ng-template>
+      </div>
+
+      <div class="info-item">
+        <strong>Tipo de Conta:</strong>
+        <span class="user-type-badge">{{
+          user.tipo === "A" ? "Administrador" : "Cliente"
+        }}</span>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <ng-container *ngIf="isEditing; else viewActions">
+        <button
+          class="btn btn-success me-2"
+          (click)="onSave()"
+          [disabled]="profileForm.invalid"
+        >
+          <span class="material-icons">save</span>
+          Salvar
+        </button>
+        <button class="btn btn-secondary" (click)="onCancelEdit()">
+          <span class="material-icons">cancel</span>
+          Cancelar
+        </button>
+      </ng-container>
+
+      <ng-template #viewActions>
+        <button class="btn btn-primary me-3" (click)="onEdit()">
+          <span class="material-icons">edit</span>
+          Editar Dados
+        </button>
+        <button class="btn btn-danger" (click)="onLogout()">
+          <span class="material-icons">logout</span>
+          Sair
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<style>
+  .h2-input {
+    font-size: 1.5rem;
+    font-weight: bold;
+    height: auto;
+    padding: 0.375rem 0.75rem;
+    line-height: 1.2;
+    background-color: transparent;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+  }
+  .p-input {
+    font-size: 1rem;
+    height: auto;
+    padding: 0.25rem 0.5rem;
+    line-height: 1.5;
+    background-color: transparent;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+  }
+</style>
