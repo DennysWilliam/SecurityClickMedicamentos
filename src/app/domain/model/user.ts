@@ -1,3 +1,5 @@
+import { UserRole } from "./user-role";
+
 export interface User {
   id: number;
   nome: string;
@@ -6,7 +8,7 @@ export interface User {
   telefone: string;
   municipio: string;
   uf: string;
-  tipo: string;
+  role: UserRole;
   senha: string;
   endereco: string;
 }
