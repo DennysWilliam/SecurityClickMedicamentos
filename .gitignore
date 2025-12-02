@@ -1,0 +1,9 @@
+.idea/
+.mvn/
+**/target
+
+*.iml
+
+.vscode/
+__MACOSX/
+*.DS_Store
