@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EstoqueService } from "src/app/services/estoque.service";
 import { MedicationService } from "src/app/services/medication.service";
 import { PharmacyService } from "src/app/services/pharmacy.service";
-import { Estoque } from "src/app/models/estoque.model";
-import { Medication } from "src/app/models/medication.model";
-import { Pharmacy } from "src/app/models/pharmacy.model";
+import { Estoque } from "src/app/domain/model/estoque.model";
+import { Medication } from "src/app/domain/model/medication.model";
+import { Pharmacy } from "src/app/domain/model/pharmacy.model";
 import { Router } from "@angular/router";
 import { first } from "rxjs";
 

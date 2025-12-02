@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { User } from "../../models/user.model";
+import { User } from "../../domain/model/user";
 import { UserService } from "../../services/user.service";
 import { getCurrentUserStoraged } from "src/app/helpers/localstorage";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";

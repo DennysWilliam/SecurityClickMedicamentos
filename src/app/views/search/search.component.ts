@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { Medication } from "src/app/models/medication.model";
+import { Medication } from "src/app/domain/model/medication.model";
 import { MedicationService } from "src/app/services/medication.service";
 import { FavoritoService } from "src/app/services/favorito.service";
 import { EstoqueService } from "src/app/services/estoque.service";

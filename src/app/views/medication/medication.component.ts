@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MedicationService } from "src/app/services/medication.service";
-import { Medication } from "src/app/models/medication.model";
+import { Medication } from "src/app/domain/model/medication.model";
 
 @Component({
   selector: "app-medication",

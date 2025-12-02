@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { PharmacyService } from "../../services/pharmacy.service";
-import { Pharmacy } from "../../models/pharmacy.model";
+import { Pharmacy } from "../../domain/model/pharmacy.model";
 import { Router } from "@angular/router";
 import { getCurrentUserStoraged } from "src/app/helpers/localstorage";
 

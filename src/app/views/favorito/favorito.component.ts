@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FavoritoService } from "../../services/favorito.service";
-import { Favorito } from "../../models/favorito.model";
+import { Favorito } from "../../domain/model/favorito.model";
 import { getCurrentUserStoraged } from "src/app/helpers/localstorage";
 
 @Component({
