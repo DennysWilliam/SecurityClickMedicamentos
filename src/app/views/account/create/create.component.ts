@@ -37,6 +37,17 @@ export class UserCreateComponent {
     });
   }
 
+  validateFields() : boolean {
+      let isFullnameValid =  this.userForm.controls['nome'].valid;
+      let isEmailValid =  this.userForm.controls['email'].valid;
+      let isPasswordValid =  this.userForm.controls['senha'].valid;
+
+      return isFullnameValid
+          && isEmailValid
+          && isPasswordValid
+
+  }
+
   create() {
     if (!this.userForm.valid) {
       this.userForm.markAllAsTouched();
