@@ -1,86 +1,102 @@
-import { Component } from "@angular/core";
-import { Router } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { LoginService } from "src/app/services/login.service";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormControl, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../../services/security/authentication.service';
+import { UserCredentialDto } from '../../../domain/dto/user-credential-dto';
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.css"],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginForm: FormGroup;
-  isLoading = false;
+export class LoginComponent implements OnInit {
+
+  email = new FormControl(null); 
+  password = new FormControl(null, [
+    Validators.minLength(2),
+    Validators.maxLength(4), // Nota: Senha de 4 caracteres é bem curta, mas mantive sua regra
+  ]);
+
+  isLoading: boolean = false;
+  isLoginIncorrect: boolean = false;
 
   constructor(
     private router: Router,
-    private formBuilder: FormBuilder,
-    private loginService: LoginService
+    private authenticationService: AuthenticationService,
   ) {
-    this.loginForm = this.formBuilder.group({
-      usuario: ["", [Validators.required, Validators.minLength(3)]],
-      senha: ["", [Validators.required, Validators.minLength(4)]],
-    });
+    console.log('login constructor');
   }
 
-  ngOnInit() {
-    if (this.loginService.isLoggedIn()) {
-      this.router.navigate(["/search"]);
-    } else {
-      this.router.navigate(["/login"]);
+  ngOnInit(): void {
+    console.log('login ngOnInit');
+    this.isLoginIncorrect = false;
+  }
+
+    loginIfCredentialIsValid(){
+    console.log('verificando as credenciais...');
+    if(this.authenticationService.isAuthenticated()) {
+      console.log('credenciais validas, navegando para tela principal');
+      this.router.navigate(['']);
+      return;
     }
+
+    console.log('credenciais invalidas ou nao existem no cache');
   }
 
-  onLogin(): void {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
+  validateFields(): boolean {
+    // Verifica se os campos são válidos e não nulos
+    return (this.email.valid && this.password.valid) ?? false;
+  }
 
-      const email = this.loginForm.get("usuario")?.value;
-      const senha = this.loginForm.get("senha")?.value;
+  login() {
+    if (!this.validateFields()) return;
 
-      const payload = { email, senha };
+    console.log('botao de login clicado');
 
-      this.loginService.getUserInfo(payload).subscribe({
-        next: (data: any) => {
-          const auth = {
-            ...data,
-            isAdmin: data.tipo === "A",
-          };
+    this.isLoading = true;
+    this.isLoginIncorrect = false;
 
-          localStorage.setItem("user", JSON.stringify(auth));
-          this.router.navigate(["/search"]);
+    let credentials: UserCredentialDto = {
+      email: this.email.value!,
+      password: this.password.value!,
+    };
+
+    console.log(credentials);
+
+    this.authenticationService.authenticate(credentials)
+      .subscribe({
+        next: (value: any) => {
           this.isLoading = false;
+          
+          console.log(value);
+          const token = value.token;
+
+          try {
+            const payload = token.split('.')[1];
+            console.log(token);
+
+            const decodedPayload = atob(payload);
+            const decoded = JSON.parse(decodedPayload);
+            console.log(decoded);
+            
+            const email = decoded.sub;
+            const fullname = decoded.fullname;
+            const role = decoded.role;
+  
+            this.authenticationService.addDataToLocalStorage(email, fullname, role, token);
+            this.router.navigate(['']);
+          } catch (e) {
+            console.error('Erro ao processar token', e);
+            this.isLoginIncorrect = true;
+          }
         },
-        error: (e) => {
-          alert("Acesso Negado");
+        error: (err) => {
           this.isLoading = false;
-        },
+          this.isLoginIncorrect = true;
+          
+          console.error('ocorreu um erro no servidor');
+          console.error(err);
+        }
       });
-    } else {
-      this.loginForm.markAllAsTouched();
-    }
-  }
-
-  hasError(fieldName: string): boolean {
-    const field = this.loginForm.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.loginForm.get(fieldName);
-
-    if (field?.errors) {
-      if (field.errors["required"]) {
-        return `${fieldName === "usuario" ? "Usuário" : "Senha"} é obrigatório`;
-      }
-      if (field.errors["minlength"]) {
-        const minLength = field.errors["minlength"].requiredLength;
-        return `${
-          fieldName === "usuario" ? "Usuário" : "Senha"
-        } deve ter pelo menos ${minLength} caracteres`;
-      }
-    }
-
-    return "";
   }
 }
