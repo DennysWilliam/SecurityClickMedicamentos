@@ -122,13 +122,6 @@
         </ng-template>
       </div>
 
-      <div class="info-item">
-        <strong>Tipo de Conta:</strong>
-        <span class="user-type-badge">{{
-          user.tipo === "A" ? "Administrador" : "Cliente"
-        }}</span>
-      </div>
-    </div>
 
     <div class="profile-actions">
       <ng-container *ngIf="isEditing; else viewActions">
