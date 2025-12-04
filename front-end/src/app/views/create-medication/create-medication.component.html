@@ -1,0 +1,73 @@
+<div class="page-container">
+  <header class="consulta-header">
+    <div class="header-content">
+      <h1>Cadastro de Medicamento</h1>
+
+      <nav class="header-nav">
+        <button class="nav-button" routerLink="/">Home</button>
+        <button class="nav-button" routerLink="/estoque">Estoque</button>
+        <button class="nav-button" routerLink="/profile">Perfil</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="create-container">
+    <h2 class="title">Cadastrar Novo Medicamento</h2>
+
+    <form (ngSubmit)="createMedication()" #medForm="ngForm" class="form-body">
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" [(ngModel)]="medication.nome" name="nome" required />
+      </div>
+
+      <div class="form-group">
+        <label>Princípio Ativo</label>
+        <input
+          type="text"
+          [(ngModel)]="medication.principioAtivo"
+          name="principioAtivo"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Categoria</label>
+        <input
+          type="text"
+          [(ngModel)]="medication.categoria"
+          name="categoria"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea
+          [(ngModel)]="medication.descricao"
+          name="descricao"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Farmácia</label>
+        <select [(ngModel)]="medication.idFarmacia" name="idFarmacia" required>
+          <option value="" disabled selected>Selecione a farmácia</option>
+          <option *ngFor="let f of farmacias" [value]="f.id">
+            {{ f.nomeFantasia }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Quantidade Inicial</label>
+        <input
+          type="number"
+          [(ngModel)]="quantidade"
+          name="quantidade"
+          required
+        />
+      </div>
+
+      <button class="btn-save" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>

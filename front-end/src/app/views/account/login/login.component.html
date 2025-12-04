@@ -1,0 +1,67 @@
+<div class="login-container">
+  <div class="login-card">
+    <img src="../../../assets/logo.png" alt="" width="150px" />
+    <div class="login-header">
+      <p>Sistema de Consulta de Medicamentos</p>
+    </div>
+
+<form class="login-form" (ngSubmit)="login()">
+
+      <!-- CAMPO EMAIL -->
+      <div class="form-group">
+        <label for="email">Minha Conta</label>
+        <input
+          type="text"
+          id="email"
+          [formControl]="email"
+          placeholder="Digite seu email"
+          [class.error]="email.invalid && email.touched"
+        />
+
+        <div class="error-message" *ngIf="email.invalid && email.touched">
+          O email é obrigatório
+        </div>
+      </div>
+
+      <!-- CAMPO SENHA -->
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input
+          type="password"
+          id="senha"
+          [formControl]="password"
+          placeholder="Digite sua senha"
+          [class.error]="password.invalid && password.touched"
+        />
+
+        <div class="error-message" *ngIf="password.invalid && password.touched">
+          A senha deve ter entre 2 e 4 caracteres
+        </div>
+      </div>
+
+      <!-- BOTÃO LOGIN -->
+      <button
+        type="submit"
+        class="login-button"
+        [disabled]="isLoading || !validateFields()"
+      >
+        <span *ngIf="!isLoading">Entrar</span>
+
+        <span *ngIf="isLoading" class="loading">
+          <span class="spinner"></span>
+          Entrando...
+        </span>
+      </button>
+
+      <!-- ERRO LOGIN INCORRETO -->
+      <p *ngIf="isLoginIncorrect" class="login-error">
+        Usuário ou senha incorretos.
+      </p>
+    </form>
+
+    <div class="login-footer">
+      <p>Acesse o sistema para consultar medicamentos disponíveis nas farmácias municipais</p>
+      <p>Não possui conta ainda? <a routerLink="/create">Clique aqui</a></p>
+    </div>
+  </div>
+</div>
